@@ -10,7 +10,7 @@ func main() {
 		for ctr := 0; ctr < testCases; ctr++ {
 			_, err = fmt.Scan(&range1, &range2)
 
-			if err == nil && range1 <= range2 {
+			if err == nil {
 				var sum int
 
 				for range1 <= range2 {
@@ -23,7 +23,7 @@ func main() {
 
 				fmt.Printf("Case %v: %v\n", ctr+1, sum)
 			} else {
-				fmt.Printf("Case %v: Invalid input\n", ctr+1)
+				break
 			}
 		}
 	}
