@@ -3,11 +3,11 @@ package main
 import "fmt"
 
 func main() {
-	var v, t int
-	_, err := fmt.Scan(&v, &t)
+	var velocity, time int
+	_, err := fmt.Scan(&velocity, &time)
 
 	for err == nil {
-		fmt.Println(2 * v * t)
-		_, err = fmt.Scan(&v, &t)
+		fmt.Println(2 * velocity * time)
+		_, err = fmt.Scan(&velocity, &time)
 	}
 }
