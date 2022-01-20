@@ -13,15 +13,13 @@ func WelcomeMessage(customer string) string {
 
 // AddBorder adds a border to a welcome message.
 func AddBorder(welcomeMsg string, numStarsPerLine int) string {
-	var border, msg string
+	var border string
 
 	for ctr := 0; ctr < numStarsPerLine; ctr++ {
 		border = border + "*"
 	}
 
-	msg = fmt.Sprintf("%v\n%v\n%v", border, welcomeMsg, border)
-
-	return msg
+	return fmt.Sprintf("%v\n%v\n%v", border, welcomeMsg, border)
 }
 
 // CleanupMessage cleans up an old marketing message.
