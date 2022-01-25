@@ -59,6 +59,7 @@ func main() {
 		}
 	}
 
+	println()
 	fmt.Println("You answered ", score, " out of ", *questionsCount, " questions correctly.")
 }
 
