@@ -18,19 +18,19 @@ func main() {
 
 	flag.Parse()
 
-	db, err := os.Open(*database)
+	filePointer, err := os.Open(*database)
 
 	if err != nil {
-		log.Fatalf("Failed to load database: %v", err)
+		log.Fatalf("Failed to open database: %v", err)
 	}
 
 	if filepath.Ext(strings.TrimSpace(*database)) != ".csv" {
 		log.Fatalf("Incorrect database format. Database should be in .csv format.")
 	}
 
-	defer db.Close()
+	defer filePointer.Close()
 
-	reader := csv.NewReader(db)
+	reader := csv.NewReader(filePointer)
 	rows, _ := reader.ReadAll()
 
 	if len(rows) < *questionsCount {
