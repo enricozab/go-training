@@ -51,6 +51,10 @@ func main() {
 			fmt.Printf("Q: %s = ", rows[index][0])
 			fmt.Scan(&input)
 
+			if len(rows[index]) <= 1 {
+				log.Fatalf("No correct answer found. Please check your data.")
+			}
+
 			if input == rows[index][1] {
 				score++
 			}
