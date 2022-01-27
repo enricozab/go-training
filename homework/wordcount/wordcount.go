@@ -11,7 +11,6 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"time"
 )
 
 type WordCounter struct {
@@ -48,12 +47,8 @@ func main() {
 
 	for index := 0; index < len(rows); index++ {
 		go WordFormat(rows[index][0], c)
-		formattedWord := <-c
-
-		go wordCount.WordCount(formattedWord)
+		go wordCount.WordCount(<-c)
 	}
-
-	time.Sleep(time.Second)
 
 	// Sort the words alphabetically
 	wordKeys := make([]string, 0, len(wordCount.words))
