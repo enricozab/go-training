@@ -10,16 +10,16 @@ GET http://localhost:8080/contacts
 # }
 
 # Test 3 - PUT - Updates a contact in the database
-PUT http://localhost:8080/contacts/1
+# PUT http://localhost:8080/contacts/1
 
-{
-    "Last": "Hello 2",
-    "First": "World 2",
-    "Company": "DSG",
-    "Address": "BGC",
-    "Country": "Philipines",
-    "Position": "Software Developer"
-}
+# {
+#     "Last": "Hello 2",
+#     "First": "World 2",
+#     "Company": "DSG",
+#     "Address": "BGC",
+#     "Country": "Philipines",
+#     "Position": "Software Developer"
+# }
 
 # Test 4 - DELETE - Deletes a contact in the database
 # DELETE http://localhost:8080/contacts/2
