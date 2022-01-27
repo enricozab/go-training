@@ -18,8 +18,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	// Checks if URL is correct (URL should have /solve)
-	if !strings.Contains(r.URL.String(), "solve") {
+	// Checks if URL path is correct
+	if r.URL.Path != "/solve" {
 		log.Fatalln("Incorrect URL.")
 	}
 

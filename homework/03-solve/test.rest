@@ -1,4 +1,4 @@
-# Test 1 - Checks if URL runs successfully
+# Test 1 - Checks if URL path is correct and runs successfully
 GET http://localhost:8080/solve
 
 # Test 2 - Independent - Single Solution

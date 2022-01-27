@@ -1,0 +1,25 @@
+# Test 1 - GET - Retrieves all contacts from the database
+GET http://localhost:8080/contacts
+
+# Test 2 - POST - Adds new contact to the database
+# POST http://localhost:8080/contacts
+
+# {
+#     "Last": "World",
+#     "First": "Hello"
+# }
+
+# Test 3 - PUT - Updates a contact in the database
+PUT http://localhost:8080/contacts/1
+
+{
+    "Last": "Hello 2",
+    "First": "World 2",
+    "Company": "DSG",
+    "Address": "BGC",
+    "Country": "Philipines",
+    "Position": "Software Developer"
+}
+
+# Test 4 - DELETE - Deletes a contact in the database
+# DELETE http://localhost:8080/contacts/2
