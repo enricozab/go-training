@@ -32,7 +32,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		// Checks if all numbers in the string are integer and store the converted integer to a new slice
 		for _, num := range splittedStringNumbers {
-			isInt, intValue := IsInteger(num)
+			isInt, intValue := isInteger(num)
 
 			numbers = append(numbers, intValue)
 			if !isInt {
@@ -58,7 +58,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			dy = float64((numbers[0] * (numbers[7]*numbers[10] - numbers[6]*numbers[11])) - (numbers[4] * (numbers[3]*numbers[10] - numbers[2]*numbers[11])) + (numbers[8] * (numbers[3]*numbers[6] - numbers[2]*numbers[7])))
 			dz = float64((numbers[0] * (numbers[5]*numbers[11] - numbers[7]*numbers[9])) - (numbers[4] * (numbers[1]*numbers[11] - numbers[3]*numbers[9])) + (numbers[8] * (numbers[1]*numbers[7] - numbers[3]*numbers[5])))
 
-			// Prints either the solution, inconsistent, or dependent
+			// Prints either the system is a solution, inconsistent, or dependent
 			if d != 0 {
 				fmt.Fprintln(w, "Solution:")
 				fmt.Fprintf(w, "x = %.2f, y = %.2f, z = %.2f", dx/d, dy/d, dz/d)
@@ -71,8 +71,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// IsInteger returns bool whether the string number can be converted to integer and also returns the converted integer
-func IsInteger(num string) (bool, int) {
+// isInteger returns bool whether the string number can be converted to integer and also returns the converted integer
+func isInteger(num string) (bool, int) {
 	if val, err := strconv.Atoi(num); err == nil {
 		return true, val
 	}

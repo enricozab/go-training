@@ -34,6 +34,7 @@ func (db *Database) handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var id int
 
+		// Checks if URL path is correct. If correct, leads to specific db process, else it will log an error
 		if r.URL.Path == "/contacts" {
 			db.process(w, r)
 		} else if n, _ := fmt.Sscanf(r.URL.Path, "/contacts/%d", &id); n == 1 {
@@ -49,11 +50,13 @@ func (db *Database) process(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		var contact Contact
 
+		// Decodes the request body
 		if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
+		// Adds new contact to the database
 		db.mu.Lock()
 		contact.ID = db.nextID
 		db.nextID++
@@ -80,6 +83,7 @@ func (db *Database) processID(id int, w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		isExisting := false
 
+		// Deletes a contact from the database if provided id exists
 		db.mu.Lock()
 		for j, item := range db.contacts {
 			if id == item.ID {
@@ -108,6 +112,7 @@ func (db *Database) processID(id int, w http.ResponseWriter, r *http.Request) {
 
 		contactIndex := -1
 
+		// Editrs a contact from the database if provided id exists
 		db.mu.Lock()
 		for i, item := range db.contacts {
 			if id == item.ID {
