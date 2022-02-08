@@ -53,10 +53,6 @@ function Movies(props) {
                 setFilteredMovies(response.data);
                 setSearchKeyword("");
 
-                setTimeout(function() {
-                    alert("Success: Movie has been added in your list successfully.");
-                }, 300);
-                
                 resetAddMovieForm();
             })
             .catch(error => {
@@ -88,12 +84,6 @@ function Movies(props) {
             setMovies(response.data);
             setFilteredMovies(response.data);
             setSearchKeyword("");
-
-            if (isEditMovie) {
-                setTimeout(function() {
-                    alert("Success: Movie has been edited successfully.");
-                }, 300);
-            }
             
             resetAddMovieForm();
         })
@@ -114,10 +104,6 @@ function Movies(props) {
             setMovies(response.data);
             setFilteredMovies(response.data);
             setSearchKeyword("");
-
-            setTimeout(function() {
-                alert("Success: Movie has been deleted from your list successfully.");
-            }, 300);
         })
         .catch(error => {
             console.log(error);
