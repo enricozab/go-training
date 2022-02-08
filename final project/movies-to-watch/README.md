@@ -1,4 +1,4 @@
-### Prerequisites
+## Prerequisites
 
 Please download and install the following in order to run the app
 * Nodejs - [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
@@ -8,19 +8,19 @@ Please download and install the following in order to run the app
     ```
 * Go - [https://go.dev/doc/install](https://go.dev/doc/install)
 
-### Installation
+## Installation
 
 #### Frontend
 1. From the main folder, go to /frontend folder
     ```sh
     cd frontend
     ```
-2. Instal npm packages
+2. Install npm packages
     ```sh
     npm install
     ```
 
-### Run the App (Without Using Docker)
+## Run the App (Without Using Docker)
 
 #### Backend
 1. From the main folder, go to /backend folder
@@ -31,7 +31,7 @@ Please download and install the following in order to run the app
     ```sh
     go run main.go
     ```
-
+Go to [http://localhost:3000](http://localhost:3000) and start using the app!
 #### Frontend
 1. From the main folder, go to /frontend folder
     ```sh
@@ -42,7 +42,8 @@ Please download and install the following in order to run the app
     npm start
     ```
 
-### Run the App (Using Docker)
+
+## Run the App (Using Docker)
 
 1. From the main folder, build the services
     ```sh
