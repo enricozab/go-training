@@ -7,6 +7,7 @@ Please download and install the following in order to run the app
     npm install npm@latest -g
     ```
 * Go - [https://go.dev/doc/install](https://go.dev/doc/install)
+* Docker Desktop - [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 
 
 ## Installation
