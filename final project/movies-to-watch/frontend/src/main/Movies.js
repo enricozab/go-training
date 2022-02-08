@@ -60,8 +60,11 @@ function Movies(props) {
                 resetAddMovieForm();
             })
             .catch(error => {
-                alert("Error: An unexpected error occurred. Please try again later.");
                 console.log(error);
+
+                let errorMessage = error?.response?.data ?? "Error: An unexpected error occurred. Please try again later."
+                
+                alert(errorMessage);
             });
         } else {
             alert("Error: Please fill out all fields.");
@@ -69,16 +72,18 @@ function Movies(props) {
     }
 
     const editMovie = (movie) => {
+        let tempMovie = {...movie};
+        
         if (!isEditMovie) {
-            movie["IsWatched"] = !movie.IsWatched;
+            tempMovie["IsWatched"] = !movie.IsWatched;
         } else {
-            movie["Title"] = title
-            movie["IsWatched"] = isWatched
+            tempMovie["Title"] = title
+            tempMovie["IsWatched"] = isWatched
         }
 
-        axios.put(`http://localhost:8080/movie-list/edit/${movie.Id}`, movie)
+        axios.put(`http://localhost:8080/movie-list/edit/${movie.Id}`, tempMovie)
         .then(response => {
-            // console.log(response.data);
+            console.log(response.data);
 
             setMovies(response.data);
             setFilteredMovies(response.data);
@@ -93,8 +98,11 @@ function Movies(props) {
             resetAddMovieForm();
         })
         .catch(error => {
-            alert("Error: An unexpected error occurred. Please try again later.");
             console.log(error);
+
+            let errorMessage = error?.response?.data ?? "Error: An unexpected error occurred. Please try again later."
+            
+            alert(errorMessage);
         });
     }
 
@@ -112,8 +120,11 @@ function Movies(props) {
             }, 300);
         })
         .catch(error => {
-            alert("Error: An unexpected error occurred. Please try again later.");
             console.log(error);
+
+            let errorMessage = error?.response?.data ?? "Error: An unexpected error occurred. Please try again later."
+            
+            alert(errorMessage);
         });
     }
 

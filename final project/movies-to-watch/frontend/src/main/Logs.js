@@ -7,7 +7,7 @@ function Logs(props) {
     useEffect(() => {
         axios.get(`http://localhost:8080/logs/${props.user.Id}`)
         .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
 
             setLogs(response.data);
         })

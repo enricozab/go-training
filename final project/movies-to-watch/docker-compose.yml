@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  server:
+    build: ./backend
+    volumes:
+      - .:/backend
+    ports:
+      - "8080:8080"
+    image: go-image:go
+    container_name: go_container
+  app:
+    build:
+      context: ./frontend
+    volumes:
+      - .:/frontend
+    ports:
+      - 3000:3000
+    image: react-image:react
+    container_name: react_container

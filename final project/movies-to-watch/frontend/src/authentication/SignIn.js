@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function SignIn(props) {
     const [username, setUsername] = useState("");
@@ -12,8 +13,22 @@ function SignIn(props) {
             props.users.forEach(user => {
                 if (user.Username === username && user.Password === password) {
                     isExisting = true
-                    window.localStorage.setItem("id", user.Id);
-                    window.location = "/";
+                    
+                    const log = {
+                        Description: "User logged in"
+                    }
+
+                    axios.post(`http://localhost:8080/logs/${user.Id}`, log)
+                    .then(response => {
+                        // console.log(response.data);
+                        
+                        window.localStorage.setItem("id", user.Id);
+                        window.location = "/";
+                    })
+                    .catch(error => {
+                        alert("Error: An unexpected error occurred. Please try again later.");
+                        console.log(error);
+                    });
                 }
             });
 

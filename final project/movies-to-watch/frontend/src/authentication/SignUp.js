@@ -8,33 +8,45 @@ function SignUp(props) {
 
     const signUp = () => {
         if (username !== "" && password !== "") {
-            let checkUser = props.users.find(user => user.Username === username);
+            const user = {
+                Username: username,
+                Password: password
+            };
 
-            if (![null, undefined].includes(checkUser)) {
-                alert("Error: Username already exists. Please try with another one.");
-            } else {
-                const user = {
-                    Username: username,
-                    Password: password
-                };
+            axios.post(`http://localhost:8080/users`, user)
+            .then(response => {
+                // console.log(response.data);
+                
+                let users = [...response.data].sort((a, b) => a.Id > b.Id ? 1 : -1)
+                let newUser = users[users.length - 1];
+                
+                const log = {
+                    Description: "User logged in"
+                }
 
-                axios.post(`http://localhost:8080/users`, user)
-                .then(response => {
-                    // console.log(response.data);
-                    
-                    let users = [...response.data].sort((a, b) => a.Id > b.Id ? 1 : -1)
-                    let newUser = users[users.length - 1];
+                alert("Success: Account created successfully.");
 
-                    alert("Success: Account created successfully.");
-                    
-                    window.localStorage.setItem("id", newUser.Id);
-                    window.location = "/";
-                })
-                .catch(error => {
-                    alert("Error: An unexpected error occurred. Please try again later.");
-                    console.log(error);
-                });
-            }
+                setTimeout(() => {
+                    axios.post(`http://localhost:8080/logs/${newUser.Id}`, log)
+                    .then(response => {
+                        // console.log(response.data);
+
+                        window.localStorage.setItem("id", newUser.Id);
+                        window.location = "/";
+                    })
+                    .catch(error => {
+                        alert("Error: An unexpected error occurred. Please try again later.");
+                        console.log(error);
+                    });
+                }, 5)
+            })
+            .catch(error => {
+                console.log(error);
+
+                let errorMessage = error?.response?.data ?? "Error: An unexpected error occurred. Please try again later."
+                
+                alert(errorMessage);
+            });
         } else {
             alert("Error: Please fill out all fields.");
         }
