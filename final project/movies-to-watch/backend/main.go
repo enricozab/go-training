@@ -395,6 +395,8 @@ func (db *Database) processLogs(id int, w http.ResponseWriter, r *http.Request) 
 
 		if tempLog.Description == "User logged in" {
 			InfoLogger.Printf("User ID %v logged in\n", id)
+		} else if tempLog.Description == "User logged out" {
+			InfoLogger.Printf("User ID %v logged out\n", id)
 		}
 
 		db.mu.Unlock()

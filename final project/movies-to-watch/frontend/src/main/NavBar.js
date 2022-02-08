@@ -1,3 +1,4 @@
+import axios from "axios";
 import MenuIcon from '../assets/menu-icon.png';
 import SignOutIcon from '../assets/sign-out-icon.png';
 
@@ -18,8 +19,21 @@ function NavBar(props) {
                     alt="Sign Out Icon"
                     className="sign-out-icon"
                     onClick={() => {
-                        window.localStorage.removeItem("id");
-                        window.location = "/";
+                        const log = {
+                            Description: "User logged out"
+                        }
+
+                        axios.post(`http://localhost:8080/logs/${props.user.Id}`, log)
+                        .then(response => {
+                            // console.log(response.data);
+                            
+                            window.localStorage.removeItem("id");
+                            window.location = "/";
+                        })
+                        .catch(error => {
+                            alert("Error: An unexpected error occurred. Please try again later.");
+                            console.log(error);
+                        });
                     }}
                     title="Sign Out"
                 />
