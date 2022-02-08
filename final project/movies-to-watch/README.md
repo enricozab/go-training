@@ -8,10 +8,11 @@ Please download and install the following in order to run the app
     ```
 * Go - [https://go.dev/doc/install](https://go.dev/doc/install)
 
+
 ## Installation
 
 #### Frontend
-1. From the main folder, go to /frontend folder
+1. From the main folder, go to frontend folder
     ```sh
     cd frontend
     ```
@@ -19,6 +20,7 @@ Please download and install the following in order to run the app
     ```sh
     npm install
     ```
+
 
 ## Run the App (Without Using Docker)
 
@@ -31,7 +33,6 @@ Please download and install the following in order to run the app
     ```sh
     go run main.go
     ```
-Go to [http://localhost:3000](http://localhost:3000) and start using the app!
 #### Frontend
 1. From the main folder, go to /frontend folder
     ```sh
@@ -41,6 +42,7 @@ Go to [http://localhost:3000](http://localhost:3000) and start using the app!
     ```sh
     npm start
     ```
+Go to [http://localhost:3000](http://localhost:3000) and start using the app!
 
 
 ## Run the App (Using Docker)
