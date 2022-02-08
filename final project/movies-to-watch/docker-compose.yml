@@ -5,7 +5,7 @@ services:
     volumes:
       - .:/backend
     ports:
-      - "8080:8080"
+      - 8080:8080
     image: go-image:go
     container_name: go_container
   app:
