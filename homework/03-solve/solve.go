@@ -21,6 +21,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// Checks if URL path is correct
 	if r.URL.Path != "/solve" {
 		log.Fatalln("Incorrect URL.")
+		return
 	}
 
 	if v, ok := r.Form["coef"]; ok {
