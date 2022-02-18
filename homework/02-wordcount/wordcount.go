@@ -24,25 +24,14 @@ func main() {
 	}
 
 	wordCount := WordCounter{words: make(map[string]int)}
+	c := make(chan []string)
 
 	// Read each file in the argument
 	for ctr := 1; ctr < len(os.Args); ctr++ {
-		data, err := ioutil.ReadFile(os.Args[ctr])
-		c := make(chan string)
+		go ReadFile(os.Args[ctr], c)
 
-		// Throws an error if file cannot be read or if file is not existing
-		if err != nil {
-			log.Fatalln("Cannot read file or file is missing:", os.Args[ctr])
-			return
-		}
-
-		// Converts data read from the file from bytes to string of slice
-		slicedData := strings.Split(string(data), "\n")
-
-		// Formats each word and counts each word
-		for _, word := range slicedData {
-			go WordFormat(word, c)
-			go wordCount.WordCount(<-c)
+		for _, word := range <-c {
+			go wordCount.WordCount(word)
 		}
 	}
 
@@ -61,14 +50,32 @@ func main() {
 	}
 }
 
-// WordFormat formats the word to lower case and removes punctuation marks and extra white spaces
-func WordFormat(word string, c chan string) {
-	word = strings.TrimSpace(word)
-	word = strings.ToLower(word)
-	regex := regexp.MustCompile(`[[:punct:]]`)
-	word = regex.ReplaceAllString(word, "")
+// Reads the file and formats each word
+func ReadFile(fileName string, c chan []string) {
+	var formattedWords []string
 
-	c <- word
+	data, err := ioutil.ReadFile(fileName)
+
+	// Throws an error if file cannot be read or if file is not existing
+	if err != nil {
+		log.Fatalln("Cannot read file or file is missing:", fileName)
+		return
+	}
+
+	// Converts data read from the file from bytes to string of slice
+	slicedData := strings.Split(string(data), "\n")
+
+	// Formats each word - transforms to lowercase, removes whitespaces and punctuation marks
+	for _, word := range slicedData {
+		word = strings.TrimSpace(word)
+		word = strings.ToLower(word)
+		regex := regexp.MustCompile(`[[:punct:]]`)
+		word = regex.ReplaceAllString(word, "")
+
+		formattedWords = append(formattedWords, word)
+	}
+
+	c <- formattedWords
 }
 
 // WordCount safely increases the count of the word
