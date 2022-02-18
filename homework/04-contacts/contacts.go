@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -65,7 +66,7 @@ func (db *Database) process(w http.ResponseWriter, r *http.Request) {
 		db.mu.Lock()
 
 		for _, item := range db.contacts {
-			if item.First == contact.First && item.Last == contact.Last {
+			if strings.ToLower(item.First) == strings.ToLower(contact.First) && strings.ToLower(item.Last) == strings.ToLower(contact.Last) {
 				defer db.mu.Unlock()
 
 				http.Error(w, "Contact already exists", http.StatusConflict)
