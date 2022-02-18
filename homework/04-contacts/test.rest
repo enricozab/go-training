@@ -5,8 +5,8 @@ GET http://localhost:8080/contacts
 # POST http://localhost:8080/contacts
 
 # {
-#     "Last": "World2",
-#     "First": "Hello2"
+#     "Last": "World1",
+#     "First": "Hello1"
 # }
 
 # Test 3 - PUT - Updates a contact in the database
@@ -22,4 +22,4 @@ GET http://localhost:8080/contacts
 # }
 
 # Test 4 - DELETE - Deletes a contact in the database
-# DELETE http://localhost:8080/contacts/1
+DELETE http://localhost:8080/contacts/1
