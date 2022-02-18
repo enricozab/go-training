@@ -10,7 +10,11 @@ import (
 
 func main() {
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+		return
+	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -31,9 +35,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		var numbers []int
 		allIntegers := true
 
-		// Checks if all numbers in the string are integer and store the converted integer to a new slice
+		// Checks if all numbers in the string are integer and stores the converted integer to a new slice
 		for _, num := range splittedStringNumbers {
-			isInt, intValue := isInteger(num)
+			isInt, intValue := IsInteger(num)
 
 			numbers = append(numbers, intValue)
 			if !isInt {
@@ -72,8 +76,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// isInteger returns bool whether the string number can be converted to integer and also returns the converted integer
-func isInteger(num string) (bool, int) {
+// IsInteger returns bool whether the string number can be converted to integer and also returns the converted integer
+func IsInteger(num string) (bool, int) {
 	if val, err := strconv.Atoi(num); err == nil {
 		return true, val
 	}

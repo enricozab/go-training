@@ -27,7 +27,11 @@ type Database struct {
 func main() {
 	db := &Database{contacts: []Contact{}}
 	db.nextID = 1
-	http.ListenAndServe(":8080", db.handler())
+	err := http.ListenAndServe(":8080", db.handler())
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+		return
+	}
 }
 
 func (db *Database) handler() http.HandlerFunc {
@@ -40,7 +44,7 @@ func (db *Database) handler() http.HandlerFunc {
 		} else if n, _ := fmt.Sscanf(r.URL.Path, "/contacts/%d", &id); n == 1 {
 			db.processID(id, w, r)
 		} else {
-			log.Fatalln("Incorrect URL.")
+			http.Error(w, "Incorrect URL", http.StatusBadRequest)
 		}
 	}
 }
@@ -48,91 +52,127 @@ func (db *Database) handler() http.HandlerFunc {
 func (db *Database) process(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		w.Header().Set("Content-Type", "application/json")
 		var contact Contact
 
 		// Decodes the request body
 		if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
 
 		// Adds new contact to the database
 		db.mu.Lock()
+
+		for _, item := range db.contacts {
+			if item.First == contact.First && item.Last == contact.Last {
+				defer db.mu.Unlock()
+
+				http.Error(w, "Contact already exists", http.StatusConflict)
+
+				return
+			}
+		}
+
 		contact.ID = db.nextID
 		db.nextID++
 		db.contacts = append(db.contacts, contact)
 		db.mu.Unlock()
 
-		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
 
 		fmt.Fprintln(w, "Success: New contact has been added successfully.")
+		data, _ := json.Marshal(contact)
+		fmt.Fprintf(w, "%+v\n", string(data))
 	case "GET":
 		w.Header().Set("Content-Type", "application/json")
 
 		fmt.Fprintln(w, "Contacts")
 
+		// Returns all contacts
 		if err := json.NewEncoder(w).Encode(db.contacts); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
+	default:
+		// Other methods are not allowed
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 	}
 }
 
 func (db *Database) processID(id int, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case "GET":
+		w.Header().Set("Content-Type", "application/json")
+
+		// Returns a specific contact if provided id exists
+		db.mu.Lock()
+		for _, item := range db.contacts {
+			if id == item.ID {
+				fmt.Fprintf(w, "Contact ID %v\n", id)
+
+				defer db.mu.Unlock()
+
+				if err := json.NewEncoder(w).Encode(item); err != nil {
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+					return
+				}
+
+				return
+			}
+		}
+		db.mu.Unlock()
+
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	case "DELETE":
-		isExisting := false
+		w.Header().Set("Content-Type", "application/json")
 
 		// Deletes a contact from the database if provided id exists
 		db.mu.Lock()
 		for j, item := range db.contacts {
 			if id == item.ID {
-				isExisting = true
 				db.contacts = append(db.contacts[:j], db.contacts[j+1:]...)
 
-				break
+				defer db.mu.Unlock()
+
+				fmt.Fprintf(w, "Success: Contact with ID %d has been deleted successfully.", id)
+
+				return
 			}
 		}
 		db.mu.Unlock()
 
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	case "PUT":
 		w.Header().Set("Content-Type", "application/json")
 
-		if isExisting {
-			fmt.Fprintf(w, "Success: Contact with ID %d has been deleted successfully.", id)
-		} else {
-			fmt.Fprintf(w, "Failed: Contact with ID %d does not exist.", id)
-		}
-	case "PUT":
 		var contact Contact
 
+		// Decodes the request body
 		if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
 
-		contactIndex := -1
-
-		// Editrs a contact from the database if provided id exists
+		// Updates a contact from the database if provided id exists
 		db.mu.Lock()
 		for i, item := range db.contacts {
 			if id == item.ID {
-				contactIndex = i
 				contact.ID = item.ID
+				db.contacts[i] = contact
 
-				break
+				defer db.mu.Unlock()
+
+				fmt.Fprintf(w, "Success: Contact with ID %d has been updated successfully.", id)
+
+				return
 			}
-		}
-		if contactIndex >= 0 {
-			db.contacts[contactIndex] = contact
 		}
 		db.mu.Unlock()
 
-		w.Header().Set("Content-Type", "application/json")
-
-		if contactIndex >= 0 {
-			fmt.Fprintf(w, "Success: Contact with ID %d has been updated successfully.", id)
-		} else {
-			fmt.Fprintf(w, "Failed: Contact with ID %d does not exist.", id)
-		}
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	default:
+		// Other methods are not allowed
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 	}
 }

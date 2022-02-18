@@ -20,7 +20,7 @@ func main() {
 
 	filePointer, err := os.Open(*database)
 
-	// Checks if database is load successfully
+	// Checks if database loaded successfully
 	if err != nil {
 		log.Fatalf("Failed to load database: %v", err)
 	}
